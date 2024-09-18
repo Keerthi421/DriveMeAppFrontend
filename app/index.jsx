@@ -21,11 +21,11 @@ export default function App() {
     "Inter-Bold": require("../assets/fonts/Inter-Bold.ttf"),
   });
 
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId: config.GOOGLE_ANDROID_CLIENT_ID,
-    iosClientId: config.GOOGLE_IOS_CLIENT_ID,
-    redirectUri: config.REDIRECT_URI,
-  });
+  // const [request, response, promptAsync] = Google.useAuthRequest({
+  //   androidClientId: config.GOOGLE_ANDROID_CLIENT_ID,
+  //   iosClientId: config.GOOGLE_IOS_CLIENT_ID,
+  //   redirectUri: config.REDIRECT_URI,
+  // });
 
   const router = useRouter();
 
@@ -61,19 +61,19 @@ export default function App() {
     checkLogin();
   }, []);
 
-  useEffect(() => {
-    if (response?.type === "success") {
-      const { authentication } = response;
-      if (authentication) {
-        AsyncStorage.setItem("token", authentication.accessToken);
-        router.push("/home");
-      }
-    }
-  }, [response]);
+  // useEffect(() => {
+  //   if (response?.type === "success") {
+  //     const { authentication } = response;
+  //     if (authentication) {
+  //       AsyncStorage.setItem("token", authentication.accessToken);
+  //       router.push("/home");
+  //     }
+  //   }
+  // }, [response]);
 
-  const handleoAuth = async () => {
-    promptAsync();
-  };
+  // const handleoAuth = async () => {
+  //   promptAsync();
+  // };
 
   if (!fontsLoaded) {
     return (

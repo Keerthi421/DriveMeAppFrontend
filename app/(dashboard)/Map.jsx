@@ -98,7 +98,7 @@ const Map = (props) => {
   }, []);
 
   const getReverseGeocodingData = async (lat, lng) => {
-    const apiKey = "5b3ce3597851110001cf6248fc29b786f3804fa5893a8ba99ebb9546";
+    const apiKey = "5b3ce3597851110001cf624802f10318ff3244c68e1a1588ecd3fe27";
     try {
       const response = await axios.get(
         `https://api.openrouteservice.org/geocode/reverse?api_key=${apiKey}&point.lat=${lat}&point.lon=${lng}&size=1`
@@ -118,7 +118,7 @@ const Map = (props) => {
   };
 
   const getRoute = async (start, end) => {
-    const apiKey = "5b3ce3597851110001cf6248fc29b786f3804fa5893a8ba99ebb9546";
+    const apiKey = "5b3ce3597851110001cf624802f10318ff3244c68e1a1588ecd3fe27";
     try {
       const response = await axios.get(
         `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${start.longitude},${start.latitude}&end=${end.longitude},${end.latitude}`
