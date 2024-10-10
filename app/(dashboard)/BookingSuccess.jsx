@@ -14,6 +14,9 @@ import axios from "axios";
 import config from "../config/env";
 import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import io from "socket.io-client";
+
+const socket = io(config.host); // Replace with your server's IP address
 
 const BookingSuccess = () => {
   const params = useLocalSearchParams();
@@ -42,6 +45,7 @@ const BookingSuccess = () => {
         console.log("Ride info", response.data?.data);
         if (response.data?.data) {
           setRideData(response.data.data);
+          socket.emit("bookingSuccess", response.data.data);
         }
       } catch (error) {
         console.error("Error fetching data:", error);

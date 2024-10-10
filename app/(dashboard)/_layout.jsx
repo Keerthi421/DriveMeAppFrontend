@@ -4,11 +4,38 @@ import { useState, useLayoutEffect } from "react";
 import HamburgerMenu from "../components/HamburgerMenu";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native";
+import io from "socket.io-client";
+import Notification from "./Notification";
+import config from "../config/env";
+import { jwtDecode } from "jwt-decode";
+const socket = io(config.host); // Replace with your server's IP address
 
 const DashboardLayout = () => {
   const [isDrawerVisible, setDrawerVisible] = useState(false);
   const [user, setUser] = useState("");
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
+  const notification = async () => {
+    const user = await AsyncStorage.getItem("token");
+    const userId = jwtDecode(user).user_id;
+
+    // Register driver with server
+    socket.emit("registerDriver", userId);
+
+    // Listen for notifications from the server
+    socket.on("receiveNotification", () => {
+      setNotificationMessage("You received a booking");
+    });
+
+    // Clean up the effect
+    return () => {
+      socket.off("receiveNotification");
+    };
+  };
+
+  const handleCloseNotification = () => {
+    setNotificationMessage(null); // Close the notification
+  };
   const toggleDrawer = () => {
     setDrawerVisible(!isDrawerVisible);
   };
@@ -23,6 +50,10 @@ const DashboardLayout = () => {
   useLayoutEffect(() => {
     fetchUserData();
   }, [user]);
+
+  useLayoutEffect(() => {
+    notification();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -41,7 +72,12 @@ const DashboardLayout = () => {
         isVisible={isDrawerVisible}
         toggleDrawer={toggleDrawer}
       />
-
+      {notificationMessage && (
+        <Notification
+          message={notificationMessage}
+          onClose={handleCloseNotification}
+        />
+      )}
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="home" options={{ headerShown: false }} />
         <Stack.Screen name="Bookings" options={{ headerShown: false }} />
