@@ -14,8 +14,9 @@ const DashboardLayout = () => {
   const [isDrawerVisible, setDrawerVisible] = useState(false);
   const [user, setUser] = useState("");
   const [notificationMessage, setNotificationMessage] = useState(null);
+  const [role, setRole] = useState("");
 
-  const notification = async () => {
+  const driverNotification = async () => {
     const user = await AsyncStorage.getItem("token");
     const userId = jwtDecode(user).user_id;
 
@@ -33,6 +34,31 @@ const DashboardLayout = () => {
     };
   };
 
+  const passengerNotification = async () => {
+    const user = await AsyncStorage.getItem("token");
+    const userId = jwtDecode(user).user_id;
+
+    // Register driver with server
+    socket.emit("registerPassenger", userId);
+
+    // Listen for notifications from the server
+    socket.on("BookingRejected", () => {
+      setNotificationMessage("You Ride is not confirmed 😕, Please reschedule");
+    });
+
+    socket.on("BookingAccepted", () => {
+      setNotificationMessage(
+        "You Ride is confirmed, Driver will reach you soon 😃 "
+      );
+    });
+
+    // Clean up the effect
+    return () => {
+      socket.off("BookingRejected");
+      socket.off("BookingAccepted");
+    };
+  };
+
   const handleCloseNotification = () => {
     setNotificationMessage(null); // Close the notification
   };
@@ -43,7 +69,7 @@ const DashboardLayout = () => {
   const fetchUserData = async () => {
     const userdata = await AsyncStorage.getItem("userData");
     let userData = JSON.parse(userdata);
-
+    setRole(userData.userRole);
     setUser(userData);
   };
 
@@ -52,7 +78,11 @@ const DashboardLayout = () => {
   }, [user]);
 
   useLayoutEffect(() => {
-    notification();
+    if (role == "Passenger") {
+      passengerNotification();
+    } else {
+      driverNotification();
+    }
   }, []);
 
   return (

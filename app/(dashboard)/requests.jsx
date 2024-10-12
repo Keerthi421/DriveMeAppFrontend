@@ -14,6 +14,9 @@ import axios from "axios";
 import config from "../config/env";
 import { useRouter } from "expo-router";
 import { Image } from "react-native-elements";
+import io from "socket.io-client";
+
+const socket = io(config.host); // Replace with your server's IP address
 
 const requests = () => {
   const router = useRouter();
@@ -30,7 +33,6 @@ const requests = () => {
             headers: { "Content-Type": "application/json" },
           }
         );
-        console.log("Requests info", response.data?.data);
         if (response.data?.data) {
           const sortedRequests = response.data.data.sort(
             (a, b) => new Date(b.date) - new Date(a.date)
@@ -56,12 +58,17 @@ const requests = () => {
   };
 
   const acceptOrRejectRide = async (ride, status) => {
-    console.log(ride, status);
+    console.log("Accept or reject", ride, status);
+    if (status == 2) {
+      socket.emit("rideRejected", ride);
+    } else {
+      socket.emit("rideAccepted", ride);
+    }
     try {
       await axios.put(
         `${config.host}/v1/drivers/booking`,
         {
-          bookingId: ride,
+          bookingId: ride.id,
           status: status,
         },
         {
@@ -183,13 +190,13 @@ const requests = () => {
                     <View style={styles.buttonActions}>
                       <TouchableOpacity
                         style={styles.button}
-                        onPress={() => acceptOrRejectRide(request.id, 1)}
+                        onPress={() => acceptOrRejectRide(request, 1)}
                       >
                         <Text style={styles.buttonText}>Accept</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
                         style={styles.buttonRed}
-                        onPress={() => acceptOrRejectRide(request.id, 2)}
+                        onPress={() => acceptOrRejectRide(request, 2)}
                       >
                         <Text style={styles.buttonText}>Reject</Text>
                       </TouchableOpacity>
