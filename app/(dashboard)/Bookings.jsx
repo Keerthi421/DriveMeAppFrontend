@@ -27,7 +27,6 @@ const Bookings = () => {
           params: { id: userId },
           headers: { "Content-Type": "application/json" },
         });
-        console.log("Passenger Ride info", response.data?.data);
         if (response.data?.data) {
           const sortedBookings = response.data.data.sort(
             (a, b) => new Date(b.date) - new Date(a.date)

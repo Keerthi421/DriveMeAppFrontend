@@ -23,7 +23,6 @@ const Payments = () => {
           params: { id: userId },
           headers: { "Content-Type": "application/json" },
         });
-        console.log("Passenger Ride info", response.data?.data);
         if (response.data?.data) {
           setBookings(response.data.data);
         }

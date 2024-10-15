@@ -42,7 +42,6 @@ const BookingSuccess = () => {
             "Content-Type": "application/json",
           },
         });
-        console.log("Ride info", response.data?.data);
         if (response.data?.data) {
           setRideData(response.data.data);
           socket.emit("bookingSuccess", response.data.data);

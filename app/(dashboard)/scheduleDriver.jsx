@@ -19,7 +19,6 @@ import config from "../config/env";
 import { jwtDecode } from "jwt-decode";
 
 const ScheduleDriver = (props) => {
-  console.log("Scedule Driver", props);
   const router = useRouter();
   const [vehicleModel, setVehicleModel] = useState("");
   const [vehicleShift, setVehicleShift] = useState("");
@@ -91,7 +90,6 @@ const ScheduleDriver = (props) => {
 
   // Handler for form submission
   const handleSubmit = async () => {
-    console.log(props);
     if (!vehicleModel || !vehicleShift || !day || !time) {
       setBackendError({
         vehicleModel: !vehicleModel ? "Vehicle model is required." : null,
@@ -115,7 +113,6 @@ const ScheduleDriver = (props) => {
           },
         }
       );
-      console.log("vehicle response", response.data);
       if (response?.data?.data) {
         setVehicle(response.data?.data?.id);
       }
@@ -125,7 +122,6 @@ const ScheduleDriver = (props) => {
           "Content-Type": "application/json",
         },
       });
-      console.log("Drivers", driversRes.data);
       if (driversRes?.data?.data) {
         setDrivers(driversRes?.data.data);
       }

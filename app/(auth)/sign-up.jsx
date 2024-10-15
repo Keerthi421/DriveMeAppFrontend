@@ -81,16 +81,12 @@ const SignUp = () => {
           },
         }
       );
-      console.log("", response);
       if (response?.data?.response) {
         await clearStates();
       }
 
-      console.log("Success:", response.data);
       router.push("/success");
     } catch (error) {
-      console.log("Error Unknown", error);
-      console.log("Error:", error.response?.data);
       if (error.response) {
         setBackendError(error.response?.data);
       } else if (error.request) {

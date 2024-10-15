@@ -8,7 +8,6 @@ import MapComponent from "./Map";
 const Home = () => {
   const router = useRouter();
   const params = useLocalSearchParams();
-  console.log("Params", params);
   const rideDetails = params; // Parse the stringified object
   // Temporarily retrieving data
   const retrieveData = async () => {

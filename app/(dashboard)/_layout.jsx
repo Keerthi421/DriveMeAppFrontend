@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
-import { useState, useLayoutEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import HamburgerMenu from "../components/HamburgerMenu";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TouchableOpacity } from "react-native";
@@ -35,6 +35,7 @@ const DashboardLayout = () => {
   };
 
   const passengerNotification = async () => {
+    console.log("Passenger notification called");
     const user = await AsyncStorage.getItem("token");
     const userId = jwtDecode(user).user_id;
 
@@ -51,7 +52,6 @@ const DashboardLayout = () => {
         "You Ride is confirmed, Driver will reach you soon 😃 "
       );
     });
-
     // Clean up the effect
     return () => {
       socket.off("BookingRejected");

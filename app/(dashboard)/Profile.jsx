@@ -36,7 +36,6 @@ const Profile = () => {
           params: { id: userId },
           headers: { "Content-Type": "application/json" },
         });
-        console.log("Passenger Profile info", response.data?.data);
         if (response.data?.data) {
           setProfile(response.data.data);
           setEditableProfile({

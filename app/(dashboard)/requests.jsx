@@ -58,7 +58,6 @@ const requests = () => {
   };
 
   const acceptOrRejectRide = async (ride, status) => {
-    console.log("Accept or reject", ride, status);
     if (status == 2) {
       socket.emit("rideRejected", ride);
     } else {
@@ -84,7 +83,6 @@ const requests = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
-      console.log("Requests info", response.data?.data);
       if (response.data?.data) {
         const sortedRequests = response.data.data.sort(
           (a, b) => new Date(b.date) - new Date(a.date)
@@ -97,7 +95,6 @@ const requests = () => {
   };
 
   const navigateToMap = async (request) => {
-    console.log(request);
     router.push({
       pathname: "/rideComplete",
       params: {
@@ -126,6 +123,8 @@ const requests = () => {
             .filter((request) => isToday(request.date))
             .sort((a, b) => new Date(a.date) - new Date(b.date))
             .map((request) => {
+              console.log("Booking request", request);
+
               return (
                 <View style={styles.card}>
                   <View style={styles.profile}>

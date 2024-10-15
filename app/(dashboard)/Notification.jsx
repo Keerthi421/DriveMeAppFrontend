@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const Notification = ({ message, onClose }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log("set timeout called");
+      onClose();
+    }, 5000); // Auto close after 5 seconds
+
+    // Cleanup the timer when the component unmounts
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onClose} style={styles.closeButton}>

@@ -19,7 +19,6 @@ import { jwtDecode } from "jwt-decode";
 const { width, height } = Dimensions.get("window");
 
 const ChooseDriver = (props) => {
-  console.log("props choose", props);
   const router = useRouter();
   const [selectedDriver, setSelectedDriver] = useState({});
   const [pickUpLocation, setPickUpLocation] = useState(props.pickUpLocation);
@@ -52,8 +51,6 @@ const ChooseDriver = (props) => {
           },
         }
       );
-      console.log(props, selectedDriver.id, pickUpLocation, dropOffLocation);
-      console.log("schedule", response.data.data);
       router.push({
         pathname: "/BookingSuccess",
         params: {

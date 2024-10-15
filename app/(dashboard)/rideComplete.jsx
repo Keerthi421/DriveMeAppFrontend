@@ -64,11 +64,7 @@ const RideComplete = () => {
     longitude: locationDropOff.coordinates[0],
   }; // Bayfield Drive, Barrie
 
-  console.log(start);
-  console.log("end", end);
-
   const getRoute = async (start, end) => {
-    console.log("user", user);
     const apiKey = "5b3ce3597851110001cf6248fc29b786f3804fa5893a8ba99ebb9546";
     try {
       const response = await axios.get(

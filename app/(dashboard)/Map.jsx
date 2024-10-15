@@ -52,7 +52,6 @@ const Map = (props) => {
       return null;
     }
   });
-  console.log("rideDetails", rideDetails);
   useEffect(() => {
     const requestAndLoadLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -76,7 +75,6 @@ const Map = (props) => {
         currentLocation.coords.longitude
       );
       if (rideDetails) {
-        console.log("Ride Details", locationPickup, locationDropOff);
         setPickUpLocation(rideDetails.pickUpLocation);
         setDropOffLocation(rideDetails.dropOffLocation);
         setSelectedLocation(locationDropOff);
@@ -129,7 +127,6 @@ const Map = (props) => {
           longitude: coord[0],
         })
       );
-      console.log("COORDINATES", coordinates);
       setRouteCoords(coordinates);
     } catch (error) {
       console.error("Failed to fetch route", error);
@@ -152,7 +149,6 @@ const Map = (props) => {
         ...prevErrors,
         dropOffLocation: null,
       }));
-      console.log("Location", location);
       setSelectedLocation(location);
       getRoute(
         {

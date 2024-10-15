@@ -33,7 +33,6 @@ const driverProfile = () => {
           params: { id: userId },
           headers: { "Content-Type": "application/json" },
         });
-        console.log("Driver Profile info", response.data?.data);
         if (response.data?.data) {
           setProfile(response.data.data);
           setEditableProfile({
@@ -66,7 +65,6 @@ const driverProfile = () => {
             headers: { "Content-Type": "application/json" },
           }
         );
-        console.log("Driver per hour updated", response.data?.data);
         if (response.data?.data) {
           setShowPerHour(response.data.data.preference.chargePerHour);
         }

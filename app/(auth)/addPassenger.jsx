@@ -1,7 +1,15 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 
 const AddPassenger = () => {
@@ -57,10 +65,8 @@ const AddPassenger = () => {
 
     try {
       // Simulate form data submission handling
-      console.log("Vehicle Information Submitted:", { vehicleName, vehicleModel, vehicleYear, vehicleImage });
       router.push("/success");
     } catch (error) {
-      console.log("Error:", error);
       setBackendError({ message: "An unexpected error occurred." });
     }
   };
@@ -125,7 +131,9 @@ const AddPassenger = () => {
           <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
             <Text style={styles.buttonText}>Upload Image</Text>
           </TouchableOpacity>
-          {vehicleImage && <Image source={{ uri: vehicleImage }} style={styles.image} />}
+          {vehicleImage && (
+            <Image source={{ uri: vehicleImage }} style={styles.image} />
+          )}
         </View>
 
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>

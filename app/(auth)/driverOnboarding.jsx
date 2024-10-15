@@ -52,7 +52,6 @@ const Onboarding = () => {
     });
 
     if (!result.canceled) {
-      console.log("Image picked: ", result);
       setImage(result.assets[0].uri);
     }
   };
@@ -71,9 +70,7 @@ const Onboarding = () => {
 
     try {
       const token = await AsyncStorage.getItem("token");
-      console.log("token", token);
       const userId = jwtDecode(token).user_id;
-      console.log("user", userId);
       if (licenseImage && insuranceImage) {
         await axios.put(
           `${config.host}/v1/drivers/onboard`,
