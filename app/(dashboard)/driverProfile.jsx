@@ -34,14 +34,11 @@ const driverProfile = () => {
           headers: { "Content-Type": "application/json" },
         });
         if (response.data?.data) {
-          setProfile(response.data.data);
+          setProfile(response.data?.data);
           setEditableProfile({
             name: response.data.data.user?.name || "",
-            // tag: response.data.data.user?.tag || "",
-            // about: response.data.data.user?.about || "",
-            // model: response.data.data.vehicle?.model || "",
             email: response.data.data.user?.email || "",
-            chargePerHour: response.data.data.user?.chargePerHour || "",
+            chargePerHour: response.data.data.user?.chargePerHour || 15,
           });
         }
       } catch (error) {
@@ -65,8 +62,9 @@ const driverProfile = () => {
             headers: { "Content-Type": "application/json" },
           }
         );
+
         if (response.data?.data) {
-          setShowPerHour(response.data.data.preference.chargePerHour);
+          setShowPerHour(response.data?.data?.preference?.chargePerHour || 15);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -120,14 +118,14 @@ const driverProfile = () => {
         <Text style={styles.text}>{editableProfile.name}</Text>
         <Text style={styles.smallText}>{editableProfile.email}</Text>
         <Text style={styles.smallText}>
-          Charge Per Hour is {showPerHour} CAD
+          Charge Per Hour is {showPerHour || 15} CAD
         </Text>
       </View>
 
       <View style={styles.card}>
         <Text style={styles.smallText}> Edit your Charge Per Hour </Text>
         <View style={styles.walletContainer}>
-          <Text style={styles.walletBalance}>{showPerHour} CAD</Text>
+          <Text style={styles.walletBalance}>{showPerHour || 15} CAD</Text>
           <TouchableOpacity onPress={handleAdd} style={styles.plusIcon}>
             <Icon name="add" size={24} color="#4CAF50" />
           </TouchableOpacity>

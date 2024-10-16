@@ -33,6 +33,7 @@ const requests = () => {
             headers: { "Content-Type": "application/json" },
           }
         );
+        console.log(response.data.data[0]);
         if (response.data?.data) {
           const sortedRequests = response.data.data.sort(
             (a, b) => new Date(b.date) - new Date(a.date)
@@ -60,8 +61,10 @@ const requests = () => {
   const acceptOrRejectRide = async (ride, status) => {
     if (status == 2) {
       socket.emit("rideRejected", ride);
-    } else {
+    } else if (status == 1) {
       socket.emit("rideAccepted", ride);
+    } else {
+      socket.emit("rideCancelled", ride);
     }
     try {
       await axios.put(
@@ -123,8 +126,6 @@ const requests = () => {
             .filter((request) => isToday(request.date))
             .sort((a, b) => new Date(a.date) - new Date(b.date))
             .map((request) => {
-              console.log("Booking request", request);
-
               return (
                 <View style={styles.card}>
                   <View style={styles.profile}>
@@ -215,11 +216,13 @@ const requests = () => {
                             </TouchableOpacity>
                           )}
                         </>
-                      ) : (
+                      ) : request.bookingStatus == 2 ? (
                         <TouchableOpacity style={styles.buttonRed}>
                           <Text style={styles.buttonText}>Ride Rejected</Text>
                         </TouchableOpacity>
-                      )}
+                      ) : request.bookingStatus == 3 ? ( // Condition for Cancelled
+                        <Text style={styles.buttonYellow}>Ride Cancelled</Text>
+                      ) : null}
                     </View>
                   )}
                 </View>
@@ -237,7 +240,7 @@ const requests = () => {
         ) : (
           requests
             .filter((request) => !isToday(request.date))
-            .sort((a, b) => new Date(a.date) - new Date(b.date))
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
             .map((request) => {
               return (
                 <View style={styles.card}>
@@ -459,7 +462,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginRight: 10,
   },
-
+  buttonYellow: {
+    color: "gray",
+  },
   buttonText: {
     color: "#fff",
     fontWeight: "bold",

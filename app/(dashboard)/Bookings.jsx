@@ -14,30 +14,32 @@ import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DriverCard from "./component/driverCard";
 import { useRouter } from "expo-router";
+import io from "socket.io-client";
 
+const socket = io(config.host);
 const Bookings = () => {
   const [bookings, setBookings] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const user = await AsyncStorage.getItem("token");
-        const userId = jwtDecode(user).user_id;
-        const response = await axios.get(`${config.host}/v1/users/bookings`, {
-          params: { id: userId },
-          headers: { "Content-Type": "application/json" },
-        });
-        if (response.data?.data) {
-          const sortedBookings = response.data.data.sort(
-            (a, b) => new Date(b.date) - new Date(a.date)
-          );
-          setBookings(sortedBookings);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+  const fetchData = async () => {
+    try {
+      const user = await AsyncStorage.getItem("token");
+      const userId = jwtDecode(user).user_id;
+      const response = await axios.get(`${config.host}/v1/users/bookings`, {
+        params: { id: userId },
+        headers: { "Content-Type": "application/json" },
+      });
+      if (response.data?.data) {
+        const sortedBookings = response.data.data.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+        setBookings(sortedBookings);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -63,7 +65,7 @@ const Bookings = () => {
         ) : (
           bookings
             .filter((booking) => isToday(booking.date))
-            .sort((a, b) => new Date(a.date) - new Date(b.date))
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
             .map((booking) => {
               console.log(" Booking Status ", booking.bookingStatus);
               // Determine the statusStyle based on bookingStatus
@@ -72,7 +74,9 @@ const Bookings = () => {
                   ? styles.statusPending
                   : booking?.bookingStatus === 1
                   ? styles.statusAvailable
-                  : styles.statusRejected;
+                  : booking?.bookingStatus === 2
+                  ? styles.statusRejected
+                  : styles.statusCancelled;
 
               // Return the BookingCard component with appropriate props
               return (
@@ -80,6 +84,7 @@ const Bookings = () => {
                   key={booking.id}
                   item={booking}
                   statusStyle={statusStyle}
+                  fetchData={() => fetchData()}
                 />
               );
             })
@@ -111,6 +116,7 @@ const Bookings = () => {
                   key={booking.id}
                   item={booking}
                   statusStyle={statusStyle}
+                  fetchData={() => fetchData()}
                 />
               );
             })
@@ -122,7 +128,7 @@ const Bookings = () => {
   );
 };
 
-const BookingCard = ({ item, statusStyle, past }) => {
+const BookingCard = ({ item, statusStyle, past, fetchData }) => {
   const router = useRouter();
 
   const handleRide = async (request) => {
@@ -148,6 +154,27 @@ const BookingCard = ({ item, statusStyle, past }) => {
       },
     });
   };
+
+  const handleRideCancel = async (ride, status) => {
+    console.log(ride.id);
+    socket.emit("bookingCancelled", ride);
+    try {
+      await axios.put(
+        `${config.host}/v1/drivers/booking`,
+        {
+          bookingId: ride.id,
+          status: status,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      fetchData();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
@@ -195,10 +222,12 @@ const BookingCard = ({ item, statusStyle, past }) => {
                 ? "Waiting for Confirmation"
                 : item?.bookingStatus === 1
                 ? "Accepted"
-                : "Booking not Accepted"}
+                : item?.bookingStatus === 2
+                ? "Booking not Accepted"
+                : "Booking cancelled"}
             </Text>
           </View>
-          {item.bookingStatus == 1 && (
+          {item.bookingStatus == 1 ? (
             <>
               <View style={styles.line}></View>
               <TouchableOpacity
@@ -208,6 +237,18 @@ const BookingCard = ({ item, statusStyle, past }) => {
                 <Text style={styles.rebookButtonText}>View Details</Text>
               </TouchableOpacity>
             </>
+          ) : (
+            item.bookingStatus === 0 && (
+              <>
+                <View style={styles.line}></View>
+                <TouchableOpacity
+                  style={styles.buttonView}
+                  onPress={() => handleRideCancel(item, 3)}
+                >
+                  <Text style={styles.cancelButtonText}>Cancel Booking?</Text>
+                </TouchableOpacity>
+              </>
+            )
           )}
         </View>
       )}
@@ -243,6 +284,9 @@ const styles = StyleSheet.create({
   },
   statusRejected: {
     color: "#FF0000",
+  },
+  statusCancelled: {
+    color: "gray",
   },
   header: {
     marginTop: 40,
@@ -289,6 +333,11 @@ const styles = StyleSheet.create({
   },
   rebookButtonText: {
     color: "green",
+    fontWeight: "600",
+    marginTop: 20,
+  },
+  cancelButtonText: {
+    color: "red",
     fontWeight: "600",
     marginTop: 20,
   },

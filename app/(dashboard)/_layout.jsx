@@ -17,9 +17,10 @@ const DashboardLayout = () => {
   const [role, setRole] = useState("");
 
   const driverNotification = async () => {
+    console.log("Role", role);
     const user = await AsyncStorage.getItem("token");
     const userId = jwtDecode(user).user_id;
-
+    console.log("userId", userId);
     // Register driver with server
     socket.emit("registerDriver", userId);
 
@@ -27,10 +28,15 @@ const DashboardLayout = () => {
     socket.on("receiveNotification", () => {
       setNotificationMessage("You received a booking");
     });
+    // Listen for cancel notifications from the server
+    socket.on("receiveCancelNotification", () => {
+      setNotificationMessage("One recent booking is cancelled");
+    });
 
     // Clean up the effect
     return () => {
       socket.off("receiveNotification");
+      socket.off("receiveCancelNotification");
     };
   };
 
@@ -38,7 +44,7 @@ const DashboardLayout = () => {
     console.log("Passenger notification called");
     const user = await AsyncStorage.getItem("token");
     const userId = jwtDecode(user).user_id;
-
+    console.log("userId", userId);
     // Register driver with server
     socket.emit("registerPassenger", userId);
 
@@ -78,12 +84,13 @@ const DashboardLayout = () => {
   }, [user]);
 
   useLayoutEffect(() => {
+    console.log("Role", role);
     if (role == "Passenger") {
       passengerNotification();
     } else {
       driverNotification();
     }
-  }, []);
+  }, [role]);
 
   return (
     <View style={styles.container}>

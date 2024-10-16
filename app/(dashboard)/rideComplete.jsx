@@ -130,10 +130,26 @@ const RideComplete = () => {
 
     let walletBalance = 0;
     if (response.data.data) {
-      walletBalance = response.data.data?.walletBalance;
+      walletBalance = response.data.data?.walletBalance || 0;
     }
+    console.log("new", walletBalance);
     if (walletBalance < parseInt(chargePerHour)) {
-      return Alert.alert("Balance Low", "Please recharge wallet to continue");
+      setIsModalVisible(false);
+      return Alert.alert(
+        "Balance Low",
+        "Please recharge wallet to continue",
+        [
+          {
+            text: "Recharge",
+            onPress: () => router.push("/(dashboard)/Profile"), // Change 'Recharge' to your route name
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ],
+        { cancelable: true }
+      );
     }
     console.log("update wallet");
 
