@@ -1,2 +1,6 @@
 node_modules
 package-lock.json
+node_modules/ws/lib/sender.js
+node_modules/ws/lib/websocket-server.js
+node_modules/ws/lib/websocket.js
+app/config/env.js
