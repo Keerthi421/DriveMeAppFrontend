@@ -1,31 +1,40 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
+import { FontAwesome } from "@expo/vector-icons"; // Make sure to install @expo/vector-icons if using Expo
 
 const { width } = Dimensions.get("window");
 
 const DriverCard = ({ driver }) => {
   const statusStyle =
     driver.status === "Pending" ? styles.statusPending : styles.statusAvailable;
+
+  // Truncate driver name if it’s longer than 20 characters, including ellipsis
+  const displayName =
+    driver.name.length > 20
+      ? driver.name.substring(0, 17) + "..."
+      : driver.name;
+
   return (
     <View style={styles.card}>
+      {/* Driver Image */}
+      <Image
+        source={require("../../../assets/images/7309681.jpg")}
+        style={styles.avatar}
+      />
+
+      {/* Driver Info */}
       <View style={styles.infoContainer}>
-        <Text style={styles.rate}>${driver.rate} CAD/hr</Text>
-        {/* <Text style={styles.distance}>
-          <Image
-            source={require("../../../assets/distance.png")}
-            style={styles.distanceIcon}
-          />
-          {driver.distance}
-        </Text> */}
-        <Text style={[styles.status, statusStyle]}>{driver.status}</Text>
+        <Text style={styles.name}>{displayName}</Text>
+        <View style={styles.ratingContainer}>
+          <Text style={styles.ratingText}>5.0</Text>
+          <FontAwesome name="star" size={14} color="#FFD700" />
+        </View>
       </View>
-      <View style={styles.imageContainer}>
-        <Image
-          // source={{ uri: driver.avatar }}
-          source={require("../../../assets/images/7309681.jpg")}
-          style={styles.avatar}
-        />
-        <Text style={styles.name}>{driver.name}</Text>
+
+      {/* Rate and Status on the Right */}
+      <View style={styles.rightContainer}>
+        <Text style={styles.rate}>${driver.rate} CAD/hr</Text>
+        <Text style={[styles.status, statusStyle]}>{driver.status}</Text>
       </View>
     </View>
   );
@@ -50,45 +59,46 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     marginRight: 10,
-    marginBottom: 10,
   },
   infoContainer: {
     flex: 1,
+    justifyContent: "center",
   },
-  imageContainer: {
+  name: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  ratingContainer: {
+    flexDirection: "row",
     alignItems: "center",
-    padding: 10,
-    width: width * 0.4,
+  },
+  ratingText: {
+    fontSize: 14,
+    marginRight: 4,
+    color: "#333",
+  },
+  rightContainer: {
+    alignItems: "flex-end",
   },
   rate: {
     fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 10,
-  },
-  distance: {
-    fontSize: 14,
-    color: "#ACACAC",
-    marginBottom: 10,
-  },
-  distanceIcon: {
-    height: 15,
-    width: 15,
-    marginRight: 10,
+    marginBottom: 5,
   },
   status: {
     padding: 5,
     textAlign: "center",
     width: 80,
+    borderRadius: 5,
   },
   statusPending: {
-    borderColor: "#FFD710",
-    color: "#030303",
     backgroundColor: "#FFD710",
+    color: "#030303",
   },
   statusAvailable: {
-    borderColor: "#1BA953",
-    color: "white",
     backgroundColor: "#1BA953",
+    color: "white",
   },
 });
 
