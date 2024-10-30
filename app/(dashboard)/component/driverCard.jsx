@@ -26,7 +26,7 @@ const DriverCard = ({ driver }) => {
       <View style={styles.infoContainer}>
         <Text style={styles.name}>{displayName}</Text>
         <View style={styles.ratingContainer}>
-          <Text style={styles.ratingText}>5.0</Text>
+          <Text style={styles.ratingText}>{driver?.averageRating}</Text>
           <FontAwesome name="star" size={14} color="#FFD700" />
         </View>
       </View>
