@@ -12,8 +12,8 @@ import axios from "axios";
 import config from "../config/env";
 import { jwtDecode } from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import DriverCard from "./component/driverCard";
 import { useRouter } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
 import io from "socket.io-client";
 
 const socket = io(config.host);
@@ -147,6 +147,7 @@ const BookingCard = ({ item, statusStyle, past, fetchData }) => {
         model: request?.vehicleDetails?.model,
         shift: request?.vehicleDetails?.shift,
         driverName: request?.driverDetails?.name,
+        driverId: request?.driverId,
         locationPickup: JSON.stringify(request.locationPickup),
         locationDropoff: JSON.stringify(request.locationDropoff),
         passengerName: request?.passengerDetails?.name,
@@ -174,6 +175,16 @@ const BookingCard = ({ item, statusStyle, past, fetchData }) => {
       console.error("Error fetching data:", error);
     }
   };
+  const handleDriverProfile = (details, item) => {
+    console.log(item.preferences);
+    router.push({
+      pathname: "/(dashboard)/ViewDriverProfile",
+      params: {
+        driverDetails: JSON.stringify(details),
+        charge: JSON.stringify(item.preferences),
+      },
+    });
+  };
 
   return (
     <View style={styles.card}>
@@ -187,11 +198,37 @@ const BookingCard = ({ item, statusStyle, past, fetchData }) => {
           // }}
           source={require("../../assets/images/7309681.jpg")}
         />
-        <View>
-          <Text style={styles.name}>{item.driverDetails?.name}</Text>
-          <Text style={styles.rate}>
-            CAD ${item.preferences?.chargePerHour ?? 0}
-          </Text>
+        <View style={styles.detailsContainer}>
+          <View>
+            <Text
+              style={styles.name}
+              onPress={() => handleDriverProfile(item.driverDetails, item)}
+            >
+              {item.driverDetails?.name}
+            </Text>
+            <View style={styles.ratingContainer}>
+              <Text style={styles.ratingText}>
+                {item?.driverDetails?.averageRating || 0}
+              </Text>
+              <FontAwesome name="star" size={14} color="#FFD700" />
+            </View>
+          </View>
+          <View style={styles.chargeVerified}>
+            <Text style={styles.rate}>
+              ${item.preferences?.chargePerHour ?? 0} CAD/hr
+            </Text>
+            <Text
+              style={
+                item.driverDetails?.isDocumentsSubmitted
+                  ? styles.statusVerified
+                  : styles.statusVerificationPending
+              }
+            >
+              {item.driverDetails?.isDocumentsSubmitted
+                ? "Verified"
+                : "Pending"}
+            </Text>
+          </View>
         </View>
       </View>
       {past ? (
@@ -276,6 +313,13 @@ const styles = StyleSheet.create({
     elevation: 3,
     marginBottom: 10,
   },
+  detailsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flex: 1,
+  },
   statusPending: {
     color: "#a88e0a",
   },
@@ -310,6 +354,7 @@ const styles = StyleSheet.create({
   },
   rate: {
     color: "gray",
+    marginBottom: 10,
   },
   carddetail: {
     borderTopWidth: 1,
@@ -372,6 +417,27 @@ const styles = StyleSheet.create({
   noBookingsText: {
     fontSize: 16,
     color: "gray",
+    textAlign: "center",
+  },
+  ratingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  ratingText: {
+    fontSize: 14,
+    marginRight: 4,
+    color: "#333",
+  },
+  statusVerificationPending: {
+    backgroundColor: "#FFD710",
+    color: "#fff",
+    padding: 5,
+    textAlign: "center",
+  },
+  statusVerified: {
+    backgroundColor: "#1BA953",
+    color: "#fff",
+    padding: 5,
     textAlign: "center",
   },
 });

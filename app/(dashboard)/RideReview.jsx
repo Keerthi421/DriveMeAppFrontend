@@ -9,14 +9,17 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AirbnbRating } from "react-native-elements";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import axios from "axios";
+import config from "../config/env";
 
 const RideReview = () => {
+  const params = useLocalSearchParams();
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const router = useRouter();
 
-  const submitReview = () => {
+  const submitReview = async () => {
     if (rating === 0) {
       Alert.alert("Error", "Please provide a rating");
       return;
@@ -26,13 +29,33 @@ const RideReview = () => {
       return;
     }
 
-    // Handle the review submission logic here (e.g., sending to the server)
-    Alert.alert("Thank you!", "Your review has been submitted.", [
-      {
-        text: "OK",
-        onPress: () => router.push("/"), // Redirect to home or any other page
-      },
-    ]);
+    try {
+      console.log(params.driverId);
+      const response = await axios.post(
+        `${config.host}/v1/drivers/rating`,
+        {
+          driverId: params.driverId,
+          rating: rating,
+          comment: review,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      if (response?.data?.message) {
+        Alert.alert("Thank you!", "Your review has been submitted.", [
+          {
+            text: "OK",
+            onPress: () => router.push("/"),
+          },
+        ]);
+      } else {
+        Alert.alert("Error", "Failed to submit the review");
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error", "An error occurred. Please try again later.");
+    }
   };
 
   return (

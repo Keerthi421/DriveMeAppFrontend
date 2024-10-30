@@ -132,6 +132,10 @@ const DashboardLayout = () => {
         <Stack.Screen name="rideComplete" options={{ headerShown: false }} />
         <Stack.Screen name="RideReview" options={{ headerShown: false }} />
         <Stack.Screen name="driverProfile" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="ViewDriverProfile"
+          options={{ headerShown: false }}
+        />
       </Stack>
     </View>
   );

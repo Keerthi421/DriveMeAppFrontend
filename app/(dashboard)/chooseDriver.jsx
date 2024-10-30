@@ -95,7 +95,10 @@ const ChooseDriver = (props) => {
                       item.id === selectedDriver?.id && styles.selectedCard,
                     ]}
                   >
-                    <DriverCard driver={item} />
+                    <DriverCard
+                      driver={item}
+                      setModalVisible={props.setModalVisible}
+                    />
                   </TouchableOpacity>
                 )}
               />

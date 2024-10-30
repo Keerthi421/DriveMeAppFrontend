@@ -178,7 +178,12 @@ const RideComplete = () => {
     Alert.alert("Payment Done");
     setIsModalVisible(false);
     setIsPaymentDone(true);
-    router.push("/(dashboard)/RideReview");
+    router.push({
+      pathname: "/(dashboard)/RideReview",
+      params: {
+        driverId: params.driverId,
+      },
+    });
   };
 
   return (
