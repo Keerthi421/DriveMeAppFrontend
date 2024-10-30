@@ -114,7 +114,7 @@ const BookingSuccess = () => {
         <FlatList
           data={[driver]}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <DriverCard driver={item} />}
+          renderItem={({ item }) => <DriverCard driver={item} isShow={true} />}
         />
       </View>
 

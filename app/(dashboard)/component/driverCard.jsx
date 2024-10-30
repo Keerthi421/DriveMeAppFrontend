@@ -6,7 +6,7 @@ import { useRouter } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
-const DriverCard = ({ driver, setModalVisible }) => {
+const DriverCard = ({ driver, setModalVisible, isShow = false }) => {
   const router = useRouter();
   const statusStyle =
     driver.status === "Pending" ? styles.statusPending : styles.statusAvailable;
@@ -18,7 +18,7 @@ const DriverCard = ({ driver, setModalVisible }) => {
 
   const handleDriverProfile = (details) => {
     console.log(details);
-    setModalVisible(false);
+    !isShow && setModalVisible(false);
     router.push({
       pathname: "/(dashboard)/ViewDriverProfile",
       params: {
