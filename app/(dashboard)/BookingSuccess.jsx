@@ -63,7 +63,7 @@ const BookingSuccess = () => {
 
   return (
     <SafeAreaView>
-      <View>
+      <View style={styles.asset}>
         <Image
           source={require("../../assets/bookingSuccess.png")}
           style={styles.image}
@@ -150,6 +150,9 @@ const styles = StyleSheet.create({
   infoContainer: {
     flex: 1,
   },
+  asset: {
+    alignItems: "center",
+  },
   imageContainer: {
     alignItems: "center",
     padding: 5,
@@ -168,6 +171,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginBottom: 10,
   },
+
   title: {
     fontSize: 45,
     fontWeight: "bold",
@@ -195,7 +199,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   wrapper: {
-    backgroundColor: "#F8faec",
+    backgroundColor: "#e4e4e4",
     borderRadius: 20,
     marginBottom: 18,
     padding: 20,
@@ -207,9 +211,11 @@ const styles = StyleSheet.create({
   },
   image: {
     marginTop: 10,
-    marginLeft: width * 0.2,
+    // marginLeft: width * 0.2,
     marginBottom: 20,
     justifyContent: "center",
+    width: 200,
+    height: 200,
   },
   button: {
     paddingVertical: 15,
