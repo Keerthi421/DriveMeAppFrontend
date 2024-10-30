@@ -303,15 +303,15 @@ export default requests;
 
 const styles = StyleSheet.create({
   avatar: {
-    width: 50,
+    width: 50, // Slightly larger avatar
     height: 50,
     borderRadius: 25,
-    marginRight: 10,
+    marginRight: 12,
   },
   name: {
     fontSize: 14,
-    fontWeight: "500",
-    textAlign: "left",
+    fontWeight: "400",
+    color: "#333",
   },
   container: {
     flexGrow: 1,
@@ -331,10 +331,11 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   sectionHeader: {
-    fontSize: 14,
-    fontWeight: "300",
-    marginBottom: 10,
-    marginTop: 10,
+    fontSize: 16,
+    fontWeight: "400",
+    marginBottom: 12,
+    marginTop: 12,
+    color: "#555", // Slightly darker for better visibility
   },
 
   buttonView: {
@@ -354,25 +355,25 @@ const styles = StyleSheet.create({
   },
   noBookingsText: {
     fontSize: 16,
-    color: "gray",
+    color: "#888",
     textAlign: "center",
+    marginVertical: 20,
   },
   profile: {
-    display: "flex",
     flexDirection: "row",
-    margin: 20,
-    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 10, // Consistent vertical margin
   },
   card: {
     backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 20,
-    marginBottom: 20,
+    borderRadius: 12, // Slightly rounded corners
+    padding: 16, // Consistent padding
+    marginBottom: 16,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 }, // Slightly deeper shadow
+    shadowOpacity: 0.15, // Softer shadow opacity
+    shadowRadius: 8, // Wider shadow spread
+    elevation: 6, // Increased elevation for Android
   },
   cardHeader: {
     flexDirection: "row",
@@ -410,11 +411,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   label: {
-    fontWeight: "bold",
-    color: "#555",
+    fontWeight: "500",
+    color: "#666", // Consistent color for labels
   },
   value: {
-    color: "#333",
+    color: "#080808",
+    fontSize: "12px",
+    fontWeight: "300",
   },
   priceContainer: {
     backgroundColor: "#f5f5f5",
@@ -435,12 +438,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   infoTag: {
-    backgroundColor: "#e0e0e0",
-    borderRadius: 20,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginRight: 5,
-    marginBottom: 5,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 12, // Rounded tags
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    marginRight: 6,
+    marginBottom: 6,
   },
   statusTag: {
     backgroundColor: "#d3d3d3",
@@ -449,29 +452,31 @@ const styles = StyleSheet.create({
     backgroundColor: "#4caf50",
     borderRadius: 20,
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24, // Consistent padding
     alignSelf: "center",
-    marginRight: 10,
+    marginRight: 12,
   },
 
   buttonRed: {
-    backgroundColor: "#fa0404",
+    backgroundColor: "#e53935", // Slightly softer red
     borderRadius: 20,
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24, // Consistent padding
     alignSelf: "center",
-    marginRight: 10,
+    marginRight: 12,
   },
   buttonYellow: {
     color: "gray",
   },
   buttonText: {
     color: "#fff",
-    fontWeight: "bold",
+    fontWeight: "600", // Consistent font weight
+    fontSize: 14,
   },
   expired: {
-    color: "#f44336",
-    fontWeight: "bold",
+    color: "#d32f2f",
+    fontWeight: "600",
+    fontSize: 14,
     textAlign: "center",
   },
   headerText: {
@@ -484,5 +489,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 10,
   },
 });

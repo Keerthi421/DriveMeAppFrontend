@@ -23,7 +23,7 @@ const DriverCard = ({ driver, setModalVisible }) => {
       pathname: "/(dashboard)/ViewDriverProfile",
       params: {
         driverDetails: JSON.stringify(details),
-        chargePerHour: details?.rate,
+        charge: JSON.stringify(details),
       },
     });
   };
@@ -72,6 +72,8 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
     borderRadius: 10,
+    borderWidth: 1, // Adds border width
+    borderColor: "#D3D3D3", // Sets border color (light gray)
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 10,
@@ -106,9 +108,15 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+  divider: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "#E0E0E0",
+    marginVertical: 10,
+  },
   avatar: {
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
     borderRadius: 30,
     marginRight: 10,
   },
@@ -141,16 +149,19 @@ const styles = StyleSheet.create({
   status: {
     padding: 5,
     textAlign: "center",
-    width: 80,
-    borderRadius: 5,
+    paddingHorizontal: 10,
   },
   statusPending: {
-    backgroundColor: "#FFD710",
-    color: "#030303",
+    backgroundColor: "#d58309",
+    color: "#fbfbfb",
+    borderRadius: 10,
+    padding: 5,
   },
   statusAvailable: {
     backgroundColor: "#1BA953",
     color: "white",
+    borderRadius: 10,
+    padding: 5,
   },
 });
 

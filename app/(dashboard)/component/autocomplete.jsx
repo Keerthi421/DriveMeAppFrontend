@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { fetchSuggestions } from './locationUtils';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  TextInput,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { fetchSuggestions } from "./locationUtils";
 
 const Autocomplete = ({ onSelect }) => {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
@@ -19,13 +26,13 @@ const Autocomplete = ({ onSelect }) => {
     setQuery(full_address);
     onSelect({
       address: full_address,
-      coordinates: geometry.coordinates
+      coordinates: geometry.coordinates,
     });
     setSuggestions([]);
   };
 
   return (
-    <View style={styles.container}>
+    <View>
       <TextInput
         placeholder="Type a location"
         value={query}
@@ -38,7 +45,7 @@ const Autocomplete = ({ onSelect }) => {
           keyExtractor={(item) => item.properties.osm_id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => handleSelectSuggestion(item)}>
-              <Text style={{ padding: 10 }}>{item.full_address}</Text>
+              <Text style={{ padding: 20 }}>{item.full_address}</Text>
             </TouchableOpacity>
           )}
         />
@@ -52,12 +59,14 @@ export default Autocomplete;
 const styles = StyleSheet.create({
   inner: {
     height: 40,
-    borderWidth: 2,
+    borderWidth: 1,
     padding: 5,
+    paddingHorizontal: 20,
     marginHorizontal: 10,
-    alignSelf: 'center',
-    justifyContent : 'center',
-    width: '100%', 
-    borderRadius : 25
-  }
+    alignSelf: "center",
+    justifyContent: "center",
+    width: "100%",
+    borderRadius: 10,
+    color: "#000000",
+  },
 });

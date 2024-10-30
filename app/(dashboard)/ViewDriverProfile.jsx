@@ -27,7 +27,7 @@ const ViewDriverProfile = () => {
       try {
         console.log("profile", charge);
         const response = await axios.get(
-          `${config.host}/v1/drivers/rating/${charge.driverId}`,
+          `${config.host}/v1/drivers/rating/${charge.driverId || charge.id}`,
           {
             headers: { "Content-Type": "application/json" },
           }
@@ -88,7 +88,9 @@ const ViewDriverProfile = () => {
         </View>
         <View style={styles.stat}>
           <Text style={styles.statLabel}>Charge per hour</Text>
-          <Text style={styles.statValue}>${charge?.chargePerHour || 0}</Text>
+          <Text style={styles.statValue}>
+            ${charge?.chargePerHour || charge?.rate || 0}
+          </Text>
         </View>
       </View>
 
