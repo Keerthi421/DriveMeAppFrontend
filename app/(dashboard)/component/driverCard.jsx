@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 import { FontAwesome } from "@expo/vector-icons"; // Make sure to install @expo/vector-icons if using Expo
+import { TouchableOpacity } from "react-native";
 
 const { width } = Dimensions.get("window");
 
@@ -16,47 +17,70 @@ const DriverCard = ({ driver }) => {
 
   return (
     <View style={styles.card}>
-      {/* Driver Image */}
-      <Image
-        source={require("../../../assets/images/7309681.jpg")}
-        style={styles.avatar}
-      />
+      <View style={styles.container}>
+        {/* Driver Image */}
+        <Image
+          source={require("../../../assets/images/7309681.jpg")}
+          style={styles.avatar}
+        />
 
-      {/* Driver Info */}
-      <View style={styles.infoContainer}>
-        <Text style={styles.name}>{displayName}</Text>
-        <View style={styles.ratingContainer}>
-          <Text style={styles.ratingText}>{driver?.averageRating}</Text>
-          <FontAwesome name="star" size={14} color="#FFD700" />
+        {/* Driver Info */}
+        <View style={styles.infoContainer}>
+          <Text style={styles.name}>{displayName}</Text>
+          <View style={styles.ratingContainer}>
+            <Text style={styles.ratingText}>{driver?.averageRating}</Text>
+            <FontAwesome name="star" size={14} color="#FFD700" />
+          </View>
+        </View>
+
+        {/* Rate and Status on the Right */}
+        <View style={styles.rightContainer}>
+          <Text style={styles.rate}>${driver.rate} CAD/hr</Text>
+          <Text style={[styles.status, statusStyle]}>{driver.status}</Text>
         </View>
       </View>
 
-      {/* Rate and Status on the Right */}
-      <View style={styles.rightContainer}>
-        <Text style={styles.rate}>${driver.rate} CAD/hr</Text>
-        <Text style={[styles.status, statusStyle]}>{driver.status}</Text>
-      </View>
+      <View style={styles.divider} />
+
+      <TouchableOpacity>
+        <Text style={styles.showprofile}>Show Profile</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
+  container: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
+  },
+  showprofile: {
+    color: "#797979",
+  },
+  card: {
+    flexDirection: "column",
+    alignItems: "center",
+    padding: 15,
     backgroundColor: "#fff",
     borderRadius: 10,
+    borderWidth: 1, // Adds border width
+    borderColor: "#D3D3D3", // Sets border color (light gray)
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowOpacity: 0.3, // Increased for a more visible shadow
+    shadowRadius: 5, // Increased for a softer shadow spread
+    elevation: 6, // For Android shadow
     marginBottom: 10,
   },
+  divider: {
+    width: "100%",
+    height: 1,
+    backgroundColor: "#E0E0E0",
+    marginVertical: 10,
+  },
   avatar: {
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
     borderRadius: 30,
     marginRight: 10,
   },
@@ -89,16 +113,19 @@ const styles = StyleSheet.create({
   status: {
     padding: 5,
     textAlign: "center",
-    width: 80,
-    borderRadius: 5,
+    paddingHorizontal: 10,
   },
   statusPending: {
-    backgroundColor: "#FFD710",
-    color: "#030303",
+    backgroundColor: "#d58309",
+    color: "#fbfbfb",
+    borderRadius: 10,
+    padding: 5,
   },
   statusAvailable: {
     backgroundColor: "#1BA953",
     color: "white",
+    borderRadius: 10,
+    padding: 5,
   },
 });
 
