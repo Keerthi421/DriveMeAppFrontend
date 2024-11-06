@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { View, Button, StyleSheet, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Location from 'expo-location';
 import Autocomplete from './component/autocomplete';
 import { getHandleSelectLocation } from './FunctionStore';
 
@@ -10,6 +11,31 @@ const LocationSearch = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const [selectedLocation, setSelectedLocation] = useState(null);
+  const [initialRegion, setInitialRegion] = useState(null);
+
+  useEffect(() => {
+    const requestLocationPermission = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === 'granted') {
+        getCurrentLocation();
+      } else {
+        console.warn("Location permission denied");
+      }
+    };
+
+    const getCurrentLocation = async () => {
+      const location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+      setInitialRegion({
+        latitude,
+        longitude,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      });
+    };
+
+    requestLocationPermission();
+  }, []);
 
   const handleSelectSuggestion = (location) => {
     setSelectedLocation(location);
@@ -25,38 +51,36 @@ const LocationSearch = () => {
     }
   };
 
-  const initialRegion = {
-    latitude: 37.7749,  // Default to San Francisco coordinates
-    longitude: -122.4194,
-    latitudeDelta: 0.05,
-    longitudeDelta: 0.05,
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.autocompleteContainer}>
         <Autocomplete onSelect={handleSelectSuggestion} />
       </View>
-      <MapView
-        style={styles.map}
-        initialRegion={initialRegion}
-        region={selectedLocation ? {
-          latitude: selectedLocation.coordinates[1],
-          longitude: selectedLocation.coordinates[0],
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
-        } : initialRegion}
-      >
-        {selectedLocation && (
-          <Marker
-            coordinate={{
-              latitude: selectedLocation.coordinates[1],
-              longitude: selectedLocation.coordinates[0]
-            }}
-            title="Selected Location"
-          />
-        )}
-      </MapView>
+      {initialRegion ? (
+        <MapView
+          style={styles.map}
+          initialRegion={initialRegion}
+          region={selectedLocation ? {
+            latitude: selectedLocation.coordinates[1],
+            longitude: selectedLocation.coordinates[0],
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          } : initialRegion}
+          showsUserLocation={true}
+        >
+          {selectedLocation && (
+            <Marker
+              coordinate={{
+                latitude: selectedLocation.coordinates[1],
+                longitude: selectedLocation.coordinates[0]
+              }}
+              title="Selected Location"
+            />
+          )}
+        </MapView>
+      ) : (
+        <Text style={styles.loadingText}>Loading Map...</Text>
+      )}
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Selected Location:</Text>
         {selectedLocation && (
@@ -90,19 +114,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 4.5,
     elevation: 5,
-    borderRadius : 25
+    borderRadius: 25
   },
   map: {
     flex: 1,
+  },
+  loadingText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: 'gray'
   },
   infoContainer: {
     position: 'absolute',
     bottom: 20,
     alignItems: 'center',
-    backgroundColor : 'white',
-    width : '100%',
-    justifyContent : 'center', 
-    alignSelf : 'center'
+    backgroundColor: 'white',
+    width: '100%',
+    justifyContent: 'center',
+    alignSelf: 'center'
   },
   locationText: {
     backgroundColor: 'white',
@@ -113,7 +143,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 16,
     elevation: 5,
-    width : '100%'
+    width: '100%'
   },
   buttonContainer: {
     backgroundColor: 'green',
@@ -126,10 +156,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
   },
-  label : {
+  label: {
     fontWeight: 'thin',
     fontSize: 18,
-    alignSelf : 'flex-start',
-    padding : 10
+    alignSelf: 'flex-start',
+    padding: 10
   }
 });
