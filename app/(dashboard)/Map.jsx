@@ -117,22 +117,32 @@ const Map = (props) => {
 
   const getRoute = async (start, end) => {
     const apiKey = "5b3ce3597851110001cf624802f10318ff3244c68e1a1588ecd3fe27";
+    const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${start.longitude},${start.latitude}&end=${end.longitude},${end.latitude}`;
+    
     try {
-      const response = await axios.get(
-        `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${start.longitude},${start.latitude}&end=${end.longitude},${end.latitude}`
-      );
-      const coordinates = response.data.features[0].geometry.coordinates.map(
-        (coord) => ({
-          latitude: coord[1],
-          longitude: coord[0],
-        })
-      );
-      setRouteCoords(coordinates);
+      console.log("Requesting route with URL:", url);
+      const response = await axios.get(url);
+      console.log("API Response:", response.data); // Log the full response for debugging
+      
+      if (response.data && response.data.features && response.data.features.length > 0) {
+        const coordinates = response.data.features[0].geometry.coordinates.map(
+          (coord) => ({
+            latitude: coord[1],
+            longitude: coord[0],
+          })
+        );
+        console.log("Coordinates", coordinates)
+        setRouteCoords(coordinates);
+      } else {
+        Alert.alert("Error", "No route data available");
+        console.error("No route data available in response", response.data);
+      }
     } catch (error) {
-      console.error("Failed to fetch route", error);
-      Alert.alert("Error", "Unable to fetch route");
+      console.error("Failed to fetch route", error.message); // Log error message for more detail
+      Alert.alert("Error", "Unable to fetch route. Please check network and API key.");
     }
   };
+
 
   const handleSelectLocation = (location, type) => {
     if (type === "pickup") {
@@ -207,7 +217,6 @@ const Map = (props) => {
           style={styles.input}
           value={pickUpLocation}
           placeholder="Pick Up"
-          editable={false}
           onTouchStart={() => {
             setHandleSelectLocation((location) =>
               handleSelectLocation(location, "pickup")
@@ -222,7 +231,6 @@ const Map = (props) => {
           style={styles.input}
           value={dropOffLocation}
           placeholder="Drop Off"
-          editable={false}
           onTouchStart={() => {
             setHandleSelectLocation((location) =>
               handleSelectLocation(location, "dropoff")

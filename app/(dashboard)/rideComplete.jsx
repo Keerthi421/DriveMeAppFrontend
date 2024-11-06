@@ -56,8 +56,8 @@ const RideComplete = () => {
   });
 
   const start = {
-    latitude: locationPickup.coordinates[0],
-    longitude: locationPickup.coordinates[1],
+    latitude: locationPickup.coordinates[1],
+    longitude: locationPickup.coordinates[0],
   }; // Georgian College, Barrie
   const end = {
     latitude: locationDropOff.coordinates[1],
@@ -65,7 +65,7 @@ const RideComplete = () => {
   }; // Bayfield Drive, Barrie
 
   const getRoute = async (start, end) => {
-    const apiKey = "5b3ce3597851110001cf6248fc29b786f3804fa5893a8ba99ebb9546";
+    const apiKey = "5b3ce3597851110001cf624802f10318ff3244c68e1a1588ecd3fe27";
     try {
       const response = await axios.get(
         `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${start.longitude},${start.latitude}&end=${end.longitude},${end.latitude}`
