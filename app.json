@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "DriveMeAppFrontend",
-    "scheme": "DriveMeAppFrontend",
+    "scheme": ["drivemeappfrontend"],
     "slug": "DriveMeAppFrontend",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -17,7 +17,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "con.drivemeapp.frontend",
+      "package": "com.drivemeapp.frontend",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
