@@ -16,6 +16,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "con.drivemeapp.frontend",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -33,6 +35,14 @@
           "fonts": "./assets/fonts/Inter-Bold.ttf"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "1309013c-7ab9-4408-afe0-d1e88eb6d7dc"
+      }
+    }
   }
 }
