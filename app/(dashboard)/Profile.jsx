@@ -16,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import Icon from "react-native-vector-icons/MaterialIcons"; // Import for icons
+import * as ImagePicker from "expo-image-picker";
 
 const Profile = () => {
   const [profile, setProfile] = useState();
@@ -26,6 +27,7 @@ const Profile = () => {
   const [cardNumber, setCardNumber] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,6 +55,15 @@ const Profile = () => {
     };
 
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+      }
+    })();
   }, []);
 
   const handleEditToggle = () => {
@@ -136,12 +147,27 @@ const Profile = () => {
     }
   };
 
+  const handlePickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setSelectedImage(result.assets[0].uri);
+      // Here you can also upload the image to your backend if needed
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Image
-        style={styles.avatar}
-        source={require("../../assets/images/passenger_profile.jpg")}
-      />
+      <TouchableOpacity onPress={handlePickImage}>
+        <Image
+          style={styles.avatar}
+          source={selectedImage ? { uri: selectedImage } : require("../../assets/images/passenger_profile.jpg")}
+        />
+      </TouchableOpacity>
       <TextInput
         style={styles.text}
         value={editableProfile.name}
